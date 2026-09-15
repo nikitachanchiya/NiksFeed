@@ -11,9 +11,20 @@ global.foodData = require('./db')(function call(err, data, CatData) {
   global.foodCategory = CatData;
 });
 
-// 2. Allow requests from React frontend (CORS fix)
+// 2. Allow requests from React frontend
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://niks-feed.vercel.app"
+];
+
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -25,9 +36,8 @@ app.get('/', (req, res) => {
   res.send('NiksFeed Backend Running');
 });
 
-// Match endpoints used by frontend (foodData and createuser)
+// 4. API routes
 app.use('/api/auth', require('./Routes/Auth'));
-
 
 app.listen(port, () => {
   console.log(`Backend running on http://localhost:${port}`);
