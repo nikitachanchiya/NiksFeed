@@ -11,7 +11,7 @@ export default function MyOrder() {
             console.log(localStorage.getItem('userEmail'));
 
             const response = await fetch(
-                "http://localhost:5001/api/auth/myOrderData",
+                `${process.env.REACT_APP_API_URL}/api/auth/myOrderData`,
                 {
                     method: 'POST',
                     headers: {
