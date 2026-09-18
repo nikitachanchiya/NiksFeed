@@ -26,6 +26,7 @@ export default function Login() {
     // Save login information
     localStorage.setItem('userEmail', credentials.email)
     localStorage.setItem('token', json.authToken)
+     localStorage.setItem('userName', json.name)
 
     // Load this user's saved cart
     const savedCart = localStorage.getItem(`cart_${credentials.email}`);

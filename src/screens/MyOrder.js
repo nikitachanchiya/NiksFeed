@@ -7,18 +7,24 @@ export default function MyOrder() {
     const [orderData, setOrderData] = useState(null);
 
     const fetchMyOrder = async () => {
+
         try {
-            console.log(localStorage.getItem('userEmail'));
+
+            const email = localStorage.getItem('userEmail');
+
+            console.log("User Email:", email);
 
             const response = await fetch(
                 `${process.env.REACT_APP_API_URL}/api/auth/myOrderData`,
                 {
                     method: 'POST',
+
                     headers: {
                         'Content-Type': 'application/json'
                     },
+
                     body: JSON.stringify({
-                        email: localStorage.getItem('userEmail')
+                        email: email
                     })
                 }
             );
@@ -28,107 +34,179 @@ export default function MyOrder() {
             console.log("My Order Response:", data);
 
             setOrderData(data);
+
         } catch (error) {
-            console.error("Error fetching orders:", error);
+
+            console.error(
+                "Error fetching orders:",
+                error
+            );
+
         }
     };
 
     useEffect(() => {
+
         fetchMyOrder();
+
     }, []);
 
+
     return (
+
         <div>
+
             <Navbar />
 
             <div className='container'>
+
                 <div className='row'>
 
-                    {orderData?.orderData?.order_data?.map((order, index) => {
+                    {orderData?.orderData?.order_data?.length > 0 ? (
 
-                        const orderDate = order[order.length - 1];
+                        orderData.orderData.order_data
+                            .slice()
+                            .reverse()
+                            .map((order, index) => {
 
-                        const items = order.slice(0, -1);
+                                /*
+                                 * Date is stored at index 0
+                                 */
+                                const orderDate = order[0]?.Order_date;
 
-                        return (
-                            <div key={index} className='row'>
+                                /*
+                                 * Food items start from index 1
+                                 */
+                                const items = order.slice(1);
 
-                                <div className='col-12 mt-5'>
-                                    <h5>
-                                        Order Date:{" "}
-                                        {new Date(orderDate).toLocaleString()}
-                                    </h5>
-                                    <hr />
-                                </div>
+                                return (
 
-                                {items.map((item) => (
                                     <div
-                                        className='col-12 col-md-6 col-lg-3'
-                                        key={item.id}
+                                        key={index}
+                                        className='row'
                                     >
-                                        <div
-                                            className="card mt-3"
-                                            style={{
-                                                width: "16rem",
-                                                maxHeight: "360px"
-                                            }}
-                                        >
 
-                                            {item.img && (
-                                                <img
-                                                    src={item.img}
-                                                    className="card-img-top"
-                                                    alt={item.name}
-                                                    style={{
-                                                        height: "120px",
-                                                        objectFit: "fill"
-                                                    }}
-                                                />
-                                            )}
+                                        {/* ORDER DATE */}
 
-                                            <div className="card-body">
+                                        <div className='col-12 mt-5'>
 
-                                                <h5 className="card-title">
-                                                    {item.name}
-                                                </h5>
+                                            <h5>
+
+                                                Order Date:{" "}
+
+                                                {orderDate
+                                                    ? new Date(orderDate).toLocaleString(
+                                                        "en-IN",
+                                                        {
+                                                            day: "2-digit",
+                                                            month: "2-digit",
+                                                            year: "numeric",
+                                                            hour: "2-digit",
+                                                            minute: "2-digit",
+                                                            second: "2-digit"
+                                                        }
+                                                    )
+                                                    : "Date not available"
+                                                }
+
+                                            </h5>
+
+                                            <hr />
+
+                                        </div>
+
+
+                                        {/* ORDER ITEMS */}
+
+                                        {items.map((item, itemIndex) => (
+
+                                            <div
+                                                className='col-12 col-md-6 col-lg-3'
+                                                key={itemIndex}
+                                            >
 
                                                 <div
-                                                    className='container w-100 p-0'
-                                                    style={{ height: "38px" }}
+                                                    className="card mt-3"
+                                                    style={{
+                                                        width: "16rem",
+                                                        maxHeight: "360px"
+                                                    }}
                                                 >
-                                                    <span className='m-1'>
-                                                        Qty: {item.qty}
-                                                    </span>
 
-                                                    <span className='m-1'>
-                                                        {item.size}
-                                                    </span>
+                                                    {item.img && (
 
-                                                    <div className='d-inline ms-2 h-100 fs-5'>
-                                                        ₹{item.price}/-
+                                                        <img
+                                                            src={item.img}
+                                                            className="card-img-top"
+                                                            alt={item.name}
+                                                            style={{
+                                                                height: "120px",
+                                                                objectFit: "fill"
+                                                            }}
+                                                        />
+
+                                                    )}
+
+                                                    <div className="card-body">
+
+                                                        <h5 className="card-title">
+                                                            {item.name}
+                                                        </h5>
+
+                                                        <div
+                                                            className='container w-100 p-0'
+                                                            style={{
+                                                                height: "38px"
+                                                            }}
+                                                        >
+
+                                                            <span className='m-1'>
+                                                                Qty: {item.qty}
+                                                            </span>
+
+                                                            <span className='m-1'>
+                                                                {item.size}
+                                                            </span>
+
+                                                            <div className='d-inline ms-2 h-100 fs-5'>
+                                                                ₹{item.price}/-
+                                                            </div>
+
+                                                        </div>
+
                                                     </div>
+
                                                 </div>
 
                                             </div>
 
-                                        </div>
+                                        ))}
+
                                     </div>
-                                ))}
 
-                            </div>
-                        );
-                    })}
+                                );
 
-                    {!orderData?.orderData?.order_data && (
+                            })
+
+                    ) : (
+
                         <div className="mt-5">
-                            <h4>No orders found.</h4>
+
+                            <h4>
+                                No orders found.
+                            </h4>
+
                         </div>
+
                     )}
 
                 </div>
+
             </div>
 
             <Footer />
+
         </div>
+
     );
 }

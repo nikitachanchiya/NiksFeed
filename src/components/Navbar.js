@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Badge from "@material-ui/core/Badge";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { useCart, useDispatchCart } from './ContextReducer';
@@ -33,6 +33,7 @@ export default function Navbar(props) {
         // Remove login information
         localStorage.removeItem('token');
         localStorage.removeItem('userEmail');
+        localStorage.removeItem('userName');
 
         navigate("/login");
     };
@@ -82,29 +83,32 @@ export default function Navbar(props) {
 
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
-                            <li className="nav-item">
-                                <Link
-                                    className="nav-link fs-5 mx-3 active"
-                                    aria-current="page"
-                                    to="/"
-                                >
-                                    Home
-                                </Link>
-                            </li>
+    <li className="nav-item">
+        <NavLink
+            end
+            to="/"
+            className={({ isActive }) =>
+                `nav-link fs-5 mx-3 ${isActive ? "active-page" : ""}`
+            }
+        >
+            Home
+        </NavLink>
+    </li>
 
-                            {localStorage.getItem("token") ? (
-                                <li className="nav-item">
-                                    <Link
-                                        className="nav-link fs-5 mx-3 active"
-                                        aria-current="page"
-                                        to="/myorder"
-                                    >
-                                        My Orders
-                                    </Link>
-                                </li>
-                            ) : null}
+    {localStorage.getItem("token") ? (
+        <li className="nav-item">
+            <NavLink
+                to="/myorder"
+                className={({ isActive }) =>
+                    `nav-link fs-5 mx-3 ${isActive ? "active-page" : ""}`
+                }
+            >
+                My Orders
+            </NavLink>
+        </li>
+    ) : null}
 
-                        </ul>
+</ul>
 
                         {!localStorage.getItem("token") ? (
 
@@ -129,7 +133,9 @@ export default function Navbar(props) {
                         ) : (
 
                             <div>
-
+                                <span className="text-white fs-5 mx-3">
+    Hi, {localStorage.getItem("userName")}
+</span>
                                 <div
                                     className="btn bg-white text-success mx-2"
                                     onClick={loadCart}

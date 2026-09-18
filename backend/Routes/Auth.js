@@ -78,9 +78,14 @@ router.post('/login', [
                 id: user.id
             }
         }
-        success = true;
-        const authToken = jwt.sign(data, jwtSecret);
-        res.json({ success, authToken })
+       success = true;
+const authToken = jwt.sign(data, jwtSecret);
+
+res.json({
+    success,
+    authToken,
+    name: user.name
+});
 
 
     } catch (error) {
@@ -144,42 +149,78 @@ router.post('/foodData', async (req, res) => {
 })
 
 router.post('/orderData', async (req, res) => {
-    let data = req.body.order_data
-    await data.splice(0,0,{Order_date:req.body.order_date})
-    console.log("1231242343242354",req.body.email)
+    try {
 
-    //if email not exisitng in db then create: else: InsertMany()
-    let eId = await Order.findOne({ 'email': req.body.email })    
-    console.log(eId)
-    if (eId===null) {
-        try {
-            console.log(data)
-            console.log("1231242343242354",req.body.email)
+        const data = req.body.order_data;
+
+        // Add order date and time at the beginning
+        data.unshift({
+            Order_date: req.body.order_date
+        });
+
+        const existingOrder = await Order.findOne({
+            email: req.body.email
+        });
+
+        // If user has no previous orders
+        if (existingOrder === null) {
+
             await Order.create({
                 email: req.body.email,
-                order_data:[data]
-            }).then(() => {
-                res.json({ success: true })
-            })
-        } catch (error) {
-            console.log(error.message)
-            res.send("Server Error", error.message)
+                order_data: [data]
+            });
 
+        } else {
+
+            // Add new order to existing orders
+            await Order.findOneAndUpdate(
+                { email: req.body.email },
+                {
+                    $push: {
+                        order_data: data
+                    }
+                }
+            );
         }
+
+        res.json({ success: true });
+
+    } catch (error) {
+
+        console.log(error.message);
+        res.status(500).json({
+            success: false,
+            error: "Server Error"
+        });
+
+    }
+});
+
+
+router.post('/myOrderData', async (req, res) => {
+
+    try {
+
+        const eId = await Order.findOne({
+            email: req.body.email
+        });
+
+        res.json({
+            orderData: eId
+        });
+
+    } catch (error) {
+
+        console.log(error.message);
+
+        res.status(500).json({
+            success: false,
+            error: "Server Error"
+        });
+
     }
 
-    else {
-        try {
-            await Order.findOneAndUpdate({email:req.body.email},
-                { $push:{order_data: data} }).then(() => {
-                    res.json({ success: true })
-                })
-        } catch (error) {
-            console.log(error.message)
-            res.send("Server Error", error.message)
-        }
-    }
-})
+});
 
 router.post('/myOrderData', async (req, res) => {
     try {
