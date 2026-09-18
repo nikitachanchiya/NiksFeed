@@ -121,7 +121,7 @@ export default function MyOrder() {
                                         {items.map((item, itemIndex) => (
 
                                             <div
-                                                className='col-12 col-md-6 col-lg-3'
+                                                className='col-12 col-md-6 col-lg-3 d-flex justify-content-center'
                                                 key={itemIndex}
                                             >
 
