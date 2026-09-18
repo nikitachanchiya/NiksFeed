@@ -83,7 +83,7 @@ export default function MyOrder() {
 
                                     <div
                                         key={index}
-                                        className='row'
+                                        className='row justify-content-center'
                                     >
 
                                         {/* ORDER DATE */}
@@ -121,15 +121,18 @@ export default function MyOrder() {
                                         {items.map((item, itemIndex) => (
 
                                             <div
-                                                className='col-12 col-md-6 col-lg-3 d-flex justify-content-center'
+                                                className='col-12 col-md-6 col-lg-3'
                                                 key={itemIndex}
+                                                style={{ display: "flex", justifyContent: "center" }}
                                             >
 
                                                 <div
                                                     className="card mt-3"
                                                     style={{
                                                         width: "16rem",
-                                                        maxHeight: "360px"
+                                                        maxHeight: "360px",
+                                                        marginLeft: "auto",
+                                                        marginRight: "auto"
                                                     }}
                                                 >
 

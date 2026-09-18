@@ -12,3 +12,5 @@ backend/node_modules/
 # Build folders
 /build
 dist/
+
+.env 
