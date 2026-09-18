@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar';
+import { useDispatchCart } from '../components/ContextReducer';
 import { useNavigate, Link } from 'react-router-dom'
 export default function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" })
   let navigate = useNavigate()
+  const dispatch = useDispatchCart();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,13 +21,29 @@ export default function Login() {
     });
     const json = await response.json()
     console.log(json);
-    if (json.success) {
-      //save the auth toke to local storage and redirect
-      localStorage.setItem('userEmail', credentials.email)
-      localStorage.setItem('token', json.authToken)
-      navigate("/");
+   if (json.success) {
 
+    // Save login information
+    localStorage.setItem('userEmail', credentials.email)
+    localStorage.setItem('token', json.authToken)
+
+    // Load this user's saved cart
+    const savedCart = localStorage.getItem(`cart_${credentials.email}`);
+
+    if (savedCart) {
+        dispatch({
+            type: "LOAD",
+            cart: JSON.parse(savedCart)
+        });
+    } else {
+        // New user = empty cart
+        dispatch({
+            type: "DROP"
+        });
     }
+
+    navigate("/");
+}
     else {
       alert("Enter Valid Credentials")
     }
