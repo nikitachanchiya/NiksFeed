@@ -7,9 +7,7 @@ export default function MyOrder() {
     const [orderData, setOrderData] = useState(null);
 
     const fetchMyOrder = async () => {
-
         try {
-
             const email = localStorage.getItem('userEmail');
 
             console.log("User Email:", email);
@@ -18,11 +16,9 @@ export default function MyOrder() {
                 `${process.env.REACT_APP_API_URL}/api/auth/myOrderData`,
                 {
                     method: 'POST',
-
                     headers: {
                         'Content-Type': 'application/json'
                     },
-
                     body: JSON.stringify({
                         email: email
                     })
@@ -36,24 +32,15 @@ export default function MyOrder() {
             setOrderData(data);
 
         } catch (error) {
-
-            console.error(
-                "Error fetching orders:",
-                error
-            );
-
+            console.error("Error fetching orders:", error);
         }
     };
 
     useEffect(() => {
-
         fetchMyOrder();
-
     }, []);
 
-
     return (
-
         <div>
 
             <Navbar />
@@ -69,29 +56,16 @@ export default function MyOrder() {
                             .reverse()
                             .map((order, index) => {
 
-                                /*
-                                 * Date is stored at index 0
-                                 */
                                 const orderDate = order[0]?.Order_date;
-
-                                /*
-                                 * Food items start from index 1
-                                 */
                                 const items = order.slice(1);
 
                                 return (
 
-                                    <div
-                                        key={index}
-                                        className='row'
-                                    >
-
-                                        {/* ORDER DATE */}
+                                    <div key={index} className='row'>
 
                                         <div className='col-12 mt-5'>
 
                                             <h5>
-
                                                 Order Date:{" "}
 
                                                 {orderDate
@@ -115,9 +89,6 @@ export default function MyOrder() {
 
                                         </div>
 
-
-                                        {/* ORDER ITEMS */}
-
                                         {items.map((item, itemIndex) => (
 
                                             <div
@@ -129,13 +100,11 @@ export default function MyOrder() {
                                                     className="card mt-3"
                                                     style={{
                                                         width: "16rem",
-                                                        maxHeight: "360px",
-                                                        
+                                                        maxHeight: "360px"
                                                     }}
                                                 >
 
                                                     {item.img && (
-
                                                         <img
                                                             src={item.img}
                                                             className="card-img-top"
@@ -145,7 +114,6 @@ export default function MyOrder() {
                                                                 objectFit: "fill"
                                                             }}
                                                         />
-
                                                     )}
 
                                                     <div className="card-body">
@@ -184,19 +152,13 @@ export default function MyOrder() {
                                         ))}
 
                                     </div>
-
                                 );
-
                             })
 
                     ) : (
 
                         <div className="mt-5">
-
-                            <h4>
-                                No orders found.
-                            </h4>
-
+                            <h4>No orders found.</h4>
                         </div>
 
                     )}
@@ -208,6 +170,5 @@ export default function MyOrder() {
             <Footer />
 
         </div>
-
     );
 }
