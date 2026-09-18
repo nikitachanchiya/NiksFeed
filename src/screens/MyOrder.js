@@ -60,7 +60,7 @@ export default function MyOrder() {
 
             <div className='container'>
 
-                <div className='row justify-content-center'>
+                <div className='row'>
 
                     {orderData?.orderData?.order_data?.length > 0 ? (
 
@@ -83,7 +83,7 @@ export default function MyOrder() {
 
                                     <div
                                         key={index}
-                                        className='row justify-content-center'
+                                        className='row'
                                     >
 
                                         {/* ORDER DATE */}
@@ -123,7 +123,6 @@ export default function MyOrder() {
                                             <div
                                                 className='col-12 col-md-6 col-lg-3'
                                                 key={itemIndex}
-                                                style={{ display: "flex", justifyContent: "center" }}
                                             >
 
                                                 <div
@@ -131,8 +130,7 @@ export default function MyOrder() {
                                                     style={{
                                                         width: "16rem",
                                                         maxHeight: "360px",
-                                                        marginLeft: "auto",
-                                                        marginRight: "auto"
+                                                        
                                                     }}
                                                 >
 

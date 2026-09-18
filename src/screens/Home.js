@@ -99,7 +99,7 @@ export default function Home() {
                     (items) => (items.CategoryName === data.CategoryName) && (items.name.toLowerCase().includes(search.toLowerCase())))
                     .map(filterItems => {
                       return (
-                        <div key={filterItems._id || filterItems.name} className='col-12 col-md-6 col-lg-3'>
+                        <div key={filterItems._id || filterItems.name} className='col-12 col-md-6 col-lg-3 d-flex justify-content-center'>
                           <Card 
                             foodName={filterItems.name} 
                             item={filterItems} 
