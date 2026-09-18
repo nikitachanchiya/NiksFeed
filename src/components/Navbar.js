@@ -144,6 +144,7 @@ export default function Navbar(props) {
                                     <Badge
                                         color="secondary"
                                         badgeContent={items.length}
+                                        overlap="rectangular"
                                     >
                                         <ShoppingCartIcon />
                                     </Badge>
