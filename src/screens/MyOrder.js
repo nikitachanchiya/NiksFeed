@@ -60,7 +60,7 @@ export default function MyOrder() {
 
             <div className='container'>
 
-                <div className='row'>
+                <div className='row justify-content-center'>
 
                     {orderData?.orderData?.order_data?.length > 0 ? (
 
